@@ -51,6 +51,15 @@ html, body {
   width: 46px; height: 46px; cursor: pointer;
 }
 
+#costumeBtnHud {
+  position: absolute; bottom: 20px; right: 16px;
+  pointer-events: auto;
+  font-size: 26px;
+  background: rgba(90, 58, 26, 0.85);
+  border: none; border-radius: 12px;
+  width: 52px; height: 52px; cursor: pointer;
+}
+
 /* ---------- Berichten ---------- */
 #message {
   position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);

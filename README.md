@@ -12,6 +12,7 @@ Een 3D-browsergame voor kinderen in **groep 3** (±6 jaar). Kies een **koala** �
 - Beweeg met de **pijltjestoetsen** of **WASD**.
 - Boven in beeld zie je de som (bijv. `7 + 5 = ?`). In het bos staan drie bordjes met getallen — loop naar het bordje met het **goede antwoord**.
 - Goed antwoord: een ⭐ ster, een vrolijk geluidje en een **nieuw kostuum** (pompoenhoedje, sjaal, zonnebril, rugzakje, kroontje, strikje, herfstblad of bladerkrans). Fout antwoord: probeer het gewoon nog eens bij een ander bordje.
+- Met de **🍁-knop rechtsonder** (tijdens het spelen, maar ook op het start- en eindscherm) open je het kostuummenu. Daar kies je uit de kostuums die je **al gewonnen hebt**; de rest staat vergrendeld (🔒). Tijdens het menu pauzeert het spel even.
 - Na 10 sommen zie je een eindscherm met je sterren en kostuums. Kostuums en sterren worden bewaard (localStorage), ook als je het spel afsluit.
 
 ## Sommen (groep 3-niveau)

@@ -38,6 +38,7 @@
     jumpT: -1,
     round: 0,
     roundId: 0,
+    paused: false,
     sum: null,
     signs: [],
     stars: 0,
@@ -358,6 +359,7 @@
   function openCostumes(from) {
     costumeReturn = from;
     RB.Sound.ensure(); RB.Sound.click();
+    if (from === "play") state.paused = true;
     refreshCostumeGrid();
     el.costumeScreen.classList.remove("hidden");
     if (from === "start") el.startScreen.classList.add("hidden");
@@ -365,9 +367,11 @@
   }
   document.getElementById("costumeBtnStart").addEventListener("click", function () { openCostumes("start"); });
   document.getElementById("costumeBtnEnd").addEventListener("click", function () { openCostumes("end"); });
+  document.getElementById("costumeBtnHud").addEventListener("click", function () { openCostumes("play"); });
   document.getElementById("costumeClose").addEventListener("click", function () {
     RB.Sound.click();
     el.costumeScreen.classList.add("hidden");
+    state.paused = false;
     if (costumeReturn === "start") {
       el.startScreen.classList.remove("hidden");
       el.totalStars.textContent = totalStars > 0 ? "⭐ In totaal verdiend: " + totalStars : "";
@@ -425,7 +429,7 @@
       squirrelShow.group.rotation.y += dt * 0.6;
       camera.position.set(Math.sin(t * 0.15) * 11, 5, Math.cos(t * 0.15) * 11);
       camera.lookAt(0, 1.2, 0);
-    } else if (state.mode === "playing" && state.animal) {
+    } else if (state.mode === "playing" && state.animal && !state.paused) {
       const fwd = new THREE.Vector3();
       camera.getWorldDirection(fwd);
       fwd.y = 0;
