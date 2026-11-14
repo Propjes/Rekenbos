@@ -214,13 +214,14 @@
     if (!state.animal) return;
     const ud = state.animal.group.userData;
     if (ud.costume) {
-      state.animal.group.remove(ud.costume);
+      if (ud.costume.parent) ud.costume.parent.remove(ud.costume);
       ud.costume = null;
     }
     const c = RB.Costumes.byId(id);
     if (!c) return;
-    const obj = c.build();
-    state.animal.group.add(obj);
+    const obj = c.build(state.animalKind);
+    const anchor = c.on === "head" ? state.animal.head : state.animal.group;
+    anchor.add(obj);
     ud.costume = obj;
     equipped = id;
     U.save("equipped", equipped);
@@ -531,5 +532,5 @@
 
   animate();
 
-  window.RB_DEBUG = { state: state, shows: [koalaShow, squirrelShow], scene: scene, world: world, camera: camera };
+  window.RB_DEBUG = { state: state, shows: [koalaShow, squirrelShow], scene: scene, world: world, camera: camera, equip: equipCostume };
 })();
