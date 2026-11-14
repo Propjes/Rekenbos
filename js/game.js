@@ -39,6 +39,7 @@
     round: 0,
     roundId: 0,
     paused: false,
+    wasMoving: false,
     sum: null,
     signs: [],
     stars: 0,
@@ -425,8 +426,8 @@
     world.update(dt, t);
 
     if (state.mode === "start") {
-      koalaShow.group.rotation.y += dt * 0.6;
-      squirrelShow.group.rotation.y += dt * 0.6;
+      koalaShow.group.rotation.y += dt * 0.35;
+      squirrelShow.group.rotation.y += dt * 0.35;
       camera.position.set(Math.sin(t * 0.15) * 11, 5, Math.cos(t * 0.15) * 11);
       camera.lookAt(0, 1.2, 0);
     } else if (state.mode === "playing" && state.animal && !state.paused) {
@@ -455,9 +456,11 @@
         let diff = target - state.heading;
         while (diff > Math.PI) diff -= Math.PI * 2;
         while (diff < -Math.PI) diff += Math.PI * 2;
-        state.heading += diff * Math.min(1, dt * 10);
+        const turnRate = state.wasMoving ? 6.5 : 3.5;
+        state.heading += diff * Math.min(1, dt * turnRate);
         state.bobPhase += dt * 12;
       }
+      state.wasMoving = moving;
 
       let y = 0;
       if (moving) y += Math.abs(Math.sin(state.bobPhase)) * 0.09;
