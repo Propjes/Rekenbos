@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rekenbos 🍂 — rekenspel in het herfstbos</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="canvasHolder"></div>
+
+<div id="hud" class="hidden">
+  <div id="roundLabel">Som 1 van 10</div>
+  <div id="sumPanel">7 + 5 = ?</div>
+  <div id="starLabel">⭐ 0</div>
+  <button id="muteBtn" title="Geluid aan/uit">🔊</button>
+</div>
+
+<div id="message" class="hidden"></div>
+
+<div id="startScreen" class="overlay">
+  <div class="panel">
+    <h1>🍂 Rekenbos 🍁</h1>
+    <p class="subtitle">Los de sommen op in het herfstbos!</p>
+    <p class="hint">Beweeg met de <b>pijltjestoetsen</b> of <b>WASD</b>.<br>
+    Loop naar het <b>houten bordje</b> met het goede antwoord.</p>
+    <p class="chooseLabel">Kies je dier:</p>
+    <div class="animalButtons">
+      <button class="animalBtn" data-animal="koala"><span class="emoji">🐨</span><span>Koala</span></button>
+      <button class="animalBtn" data-animal="eekhoorn"><span class="emoji">🐿️</span><span>Eekhoorn</span></button>
+    </div>
+    <button id="costumeBtnStart" class="smallBtn">🍁 Kostuums</button>
+    <p id="totalStars" class="totalStars"></p>
+  </div>
+</div>
+
+<div id="costumeScreen" class="overlay hidden">
+  <div class="panel">
+    <h2>🍁 Kostuums</h2>
+    <p class="hint">Verdien kostuums door sommen goed te maken!</p>
+    <div id="costumeGrid" class="costumeGrid"></div>
+    <button id="costumeClose" class="smallBtn">Terug</button>
+  </div>
+</div>
+
+<div id="endScreen" class="overlay hidden">
+  <div class="panel">
+    <h1>🎉 Goed gedaan! 🎉</h1>
+    <p id="endStars" class="bigStars"></p>
+    <p id="endCostumes" class="hint"></p>
+    <div class="rowButtons">
+      <button id="againBtn" class="animalBtn small"><span class="emoji">🔁</span><span>Opnieuw spelen</span></button>
+      <button id="costumeBtnEnd" class="smallBtn">🍁 Kostuums</button>
+    </div>
+  </div>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sums.js"></script>
+<script src="js/animals.js"></script>
+<script src="js/costumes.js"></script>
+<script src="js/world.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>

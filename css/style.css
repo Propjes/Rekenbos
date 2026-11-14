@@ -1,0 +1,143 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  font-family: "Comic Sans MS", "Chalkboard SE", "Segoe UI", sans-serif;
+  background: #f6d9b8;
+  user-select: none;
+}
+
+#canvasHolder, #canvasHolder canvas { position: fixed; inset: 0; }
+
+.hidden { display: none !important; }
+
+/* ---------- HUD ---------- */
+#hud { position: fixed; inset: 0; pointer-events: none; z-index: 5; }
+
+#sumPanel {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(#a06a35, #7a4a21);
+  border: 5px solid #5a3a1a;
+  border-radius: 18px;
+  color: #fff8ec;
+  font-size: 46px; font-weight: bold;
+  padding: 8px 34px;
+  text-shadow: 2px 2px 0 #4a2c14;
+  box-shadow: 0 6px 14px rgba(60, 30, 10, 0.4);
+  white-space: nowrap;
+}
+
+#roundLabel {
+  position: absolute; top: 22px; left: 18px;
+  background: rgba(90, 58, 26, 0.85);
+  color: #ffe9c9; font-size: 24px; font-weight: bold;
+  padding: 8px 18px; border-radius: 14px;
+}
+
+#starLabel {
+  position: absolute; top: 22px; right: 70px;
+  background: rgba(90, 58, 26, 0.85);
+  color: #ffd94a; font-size: 28px; font-weight: bold;
+  padding: 8px 18px; border-radius: 14px;
+}
+
+#muteBtn {
+  position: absolute; top: 20px; right: 16px;
+  pointer-events: auto;
+  font-size: 24px;
+  background: rgba(90, 58, 26, 0.85);
+  color: #fff; border: none; border-radius: 12px;
+  width: 46px; height: 46px; cursor: pointer;
+}
+
+/* ---------- Berichten ---------- */
+#message {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+  background: rgba(60, 35, 12, 0.88);
+  color: #fff3df;
+  font-size: 32px; font-weight: bold;
+  padding: 14px 30px; border-radius: 20px;
+  z-index: 6; pointer-events: none;
+  transition: opacity 0.25s;
+  white-space: nowrap;
+}
+
+/* ---------- Schermen ---------- */
+.overlay {
+  position: fixed; inset: 0; z-index: 10;
+  background: rgba(70, 38, 12, 0.55);
+  display: flex; align-items: center; justify-content: center;
+}
+
+.panel {
+  background: linear-gradient(#fdf0d5, #f3d9a8);
+  border: 6px solid #8b5a2b;
+  border-radius: 28px;
+  padding: 30px 44px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(40, 20, 5, 0.5);
+  max-width: 640px;
+}
+
+.panel h1 { font-size: 46px; color: #7a3b12; margin-bottom: 6px; }
+.panel h2 { font-size: 36px; color: #7a3b12; margin-bottom: 8px; }
+
+.subtitle { font-size: 24px; color: #8b5a2b; margin-bottom: 10px; }
+.hint { font-size: 19px; color: #6b4226; margin: 10px 0; line-height: 1.45; }
+.chooseLabel { font-size: 24px; font-weight: bold; color: #7a3b12; margin: 14px 0 8px; }
+.totalStars { margin-top: 12px; font-size: 20px; color: #a0622d; font-weight: bold; }
+.bigStars { font-size: 40px; color: #c98a12; font-weight: bold; margin: 10px 0; }
+
+.animalButtons { display: flex; gap: 22px; justify-content: center; margin-bottom: 14px; }
+.rowButtons { display: flex; gap: 18px; justify-content: center; margin-top: 16px; align-items: center; }
+
+.animalBtn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-family: inherit;
+  font-size: 26px; font-weight: bold; color: #fff8ec;
+  background: linear-gradient(#e8873a, #c05f1a);
+  border: 4px solid #8b4513;
+  border-radius: 22px;
+  padding: 16px 34px;
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.animalBtn .emoji { font-size: 54px; }
+.animalBtn.small { font-size: 20px; padding: 10px 22px; }
+.animalBtn.small .emoji { font-size: 30px; }
+.animalBtn:hover { transform: scale(1.07); }
+
+.smallBtn {
+  font-family: inherit;
+  font-size: 20px; font-weight: bold;
+  color: #fff8ec;
+  background: linear-gradient(#a06a35, #7a4a21);
+  border: 3px solid #5a3a1a;
+  border-radius: 16px;
+  padding: 10px 22px;
+  cursor: pointer;
+}
+.smallBtn:hover { transform: scale(1.05); }
+
+/* ---------- Kostuumgrid ---------- */
+.costumeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.costumeTile {
+  font-family: inherit;
+  border: 3px solid #8b5a2b;
+  border-radius: 16px;
+  background: #fff6e3;
+  padding: 10px 6px;
+  cursor: pointer;
+  font-size: 14px; font-weight: bold; color: #6b4226;
+}
+.costumeTile .emoji { display: block; font-size: 34px; margin-bottom: 4px; }
+.costumeTile.locked { opacity: 0.45; cursor: default; filter: grayscale(0.8); }
+.costumeTile.equipped { background: #ffd94a; border-color: #c98a12; }
+.costumeTile:not(.locked):hover { transform: scale(1.06); }
