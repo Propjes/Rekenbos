@@ -32,7 +32,6 @@
     mode: "start",          // start | playing | ended
     animal: null,           // {group, head, body}
     animalKind: null,
-    otherAnimal: null,
     pos: new THREE.Vector3(0, 0, 0),
     heading: 0,
     bobPhase: 0,
@@ -145,7 +144,7 @@
     const options = state.sum.options;
     const spots = [];
     let tries = 0;
-    while (spots.length < options.length && tries < 300) {
+    while (spots.length < options.length && tries < 600) {
       tries++;
       const a = U.rand(0, Math.PI * 2), r = U.rand(9, 26);
       const x = Math.cos(a) * r, z = Math.sin(a) * r;
@@ -153,6 +152,11 @@
       let ok = true;
       for (let i = 0; i < spots.length; i++) {
         if (U.dist2D(x, z, spots[i].x, spots[i].z) < 7) { ok = false; break; }
+      }
+      if (!ok) continue;
+      for (let j = 0; j < world.colliders.length; j++) {
+        const c = world.colliders[j];
+        if (U.dist2D(x, z, c.x, c.z) < c.r + 2.2) { ok = false; break; }
       }
       if (ok) spots.push({ x: x, z: z });
     }
@@ -307,15 +311,17 @@
     el.endScreen.classList.remove("hidden");
   }
 
-  function startGame(kind) {
+  function startGame(kind, chosenShow, otherShow) {
     state.animalKind = kind;
-    const builder = kind === "koala" ? RB.Animals.koala : RB.Animals.eekhoorn;
-    state.animal = builder();
-    state.animal.group.position.copy(state.pos);
-    scene.add(state.animal.group);
-    if (state.otherAnimal) {
-      scene.remove(state.otherAnimal.group);
-      state.otherAnimal = null;
+    if (otherShow) scene.remove(otherShow.group);
+    if (chosenShow) {
+      state.animal = chosenShow;
+      state.animal.group.position.set(0, 0, 0);
+    } else {
+      const builder = kind === "koala" ? RB.Animals.koala : RB.Animals.eekhoorn;
+      state.animal = builder();
+      state.animal.group.position.copy(state.pos);
+      scene.add(state.animal.group);
     }
     if (equipped) equipCostume(equipped);
     state.mode = "playing";
@@ -335,7 +341,6 @@
   const squirrelShow = RB.Animals.eekhoorn();
   squirrelShow.group.position.set(2.4, 0, 0);
   scene.add(squirrelShow.group);
-  state.otherAnimal = null;
 
   // ---------- knoppen ----------
   document.querySelectorAll(".animalBtn[data-animal]").forEach(function (b) {
@@ -343,12 +348,9 @@
       RB.Sound.ensure();
       RB.Sound.click();
       const kind = b.getAttribute("data-animal");
-      if (kind === "koala") {
-        state.otherAnimal = squirrelShow;
-      } else {
-        state.otherAnimal = koalaShow;
-      }
-      startGame(kind);
+      const chosen = kind === "koala" ? koalaShow : squirrelShow;
+      const other = kind === "koala" ? squirrelShow : koalaShow;
+      startGame(kind, chosen, other);
     });
   });
 
@@ -424,12 +426,19 @@
       camera.position.set(Math.sin(t * 0.15) * 11, 5, Math.cos(t * 0.15) * 11);
       camera.lookAt(0, 1.2, 0);
     } else if (state.mode === "playing" && state.animal) {
-      // beweging
-      let mx = 0, mz = 0;
-      if (keys["arrowup"] || keys["w"]) mz -= 1;
-      if (keys["arrowdown"] || keys["s"]) mz += 1;
-      if (keys["arrowleft"] || keys["a"]) mx -= 1;
-      if (keys["arrowright"] || keys["d"]) mx += 1;
+      const fwd = new THREE.Vector3();
+      camera.getWorldDirection(fwd);
+      fwd.y = 0;
+      fwd.normalize();
+      const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize();
+
+      let ix = 0, iy = 0;
+      if (keys["arrowup"] || keys["w"]) iy += 1;
+      if (keys["arrowdown"] || keys["s"]) iy -= 1;
+      if (keys["arrowright"] || keys["d"]) ix += 1;
+      if (keys["arrowleft"] || keys["a"]) ix -= 1;
+      let mx = fwd.x * iy + right.x * ix;
+      let mz = fwd.z * iy + right.z * ix;
       const moving = (mx !== 0 || mz !== 0);
       if (moving) {
         const len = Math.sqrt(mx * mx + mz * mz);
@@ -457,9 +466,12 @@
       state.animal.group.position.copy(state.pos);
       state.animal.group.rotation.y = state.heading;
 
-      // camera volgt
-      const desired = new THREE.Vector3(state.pos.x, state.pos.y + 9.5, state.pos.z + 11.5);
-      camera.position.lerp(desired, Math.min(1, dt * 5));
+      const desired = new THREE.Vector3(
+        state.pos.x - Math.sin(state.heading) * 11.5,
+        state.pos.y + 9.5,
+        state.pos.z - Math.cos(state.heading) * 11.5
+      );
+      camera.position.lerp(desired, Math.min(1, dt * 4));
       camera.lookAt(state.pos.x, state.pos.y + 1.2, state.pos.z);
 
       // bordjes: wiebelen + schudden
@@ -499,5 +511,5 @@
 
   animate();
 
-  window.RB_DEBUG = state;
+  window.RB_DEBUG = { state: state, shows: [koalaShow, squirrelShow], scene: scene, world: world, camera: camera };
 })();

@@ -212,6 +212,121 @@ RB.World = (function () {
       }
     });
 
+    // ---------- kleine bosdiertjes: slakjes, egeltjes en vogeltjes ----------
+    const critters = [];
+    function addCritter(g, cx, cz, r, speed, air, h) {
+      const c = {
+        g: g, cx: cx, cz: cz, r: r,
+        a: U.rand(0, Math.PI * 2), speed: speed,
+        phase: U.rand(0, Math.PI * 2),
+        air: !!air, h: h || 0, wingL: null, wingR: null
+      };
+      scene.add(g);
+      critters.push(c);
+      return c;
+    }
+
+    for (let i = 0; i < 4; i++) {
+      const g = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8), new THREE.MeshLambertMaterial({ color: 0xa89468 }));
+      body.scale.set(1.5, 0.55, 1);
+      body.position.y = 0.10;
+      body.castShadow = true;
+      const shell = new THREE.Mesh(new THREE.SphereGeometry(0.17, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshLambertMaterial({ color: 0x8a6a3a }));
+      shell.position.set(-0.05, 0.17, 0);
+      shell.castShadow = true;
+      const stalkMat = new THREE.MeshLambertMaterial({ color: 0xa89468 });
+      const e1 = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.15, 6), stalkMat);
+      const e2 = e1.clone();
+      e1.position.set(0.10, 0.22, 0.07);
+      e2.position.set(0.10, 0.22, -0.07);
+      const eyeMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+      const b1 = new THREE.Mesh(new THREE.SphereGeometry(0.03, 6, 5), eyeMat);
+      const b2 = b1.clone();
+      b1.position.set(0.10, 0.30, 0.07);
+      b2.position.set(0.10, 0.30, -0.07);
+      g.add(body, shell, e1, e2, b1, b2);
+      const a0 = U.rand(0, Math.PI * 2), r0 = U.rand(8, 28);
+      addCritter(g, Math.cos(a0) * r0, Math.sin(a0) * r0, U.rand(1.5, 3), U.rand(0.05, 0.1));
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const g = new THREE.Group();
+      const spikes = new THREE.Mesh(new THREE.IcosahedronGeometry(0.34, 1), new THREE.MeshLambertMaterial({ color: 0x5f4326, flatShading: true }));
+      spikes.position.y = 0.26;
+      spikes.castShadow = true;
+      const skin = new THREE.Mesh(new THREE.SphereGeometry(0.30, 12, 8), new THREE.MeshLambertMaterial({ color: 0xa8845c }));
+      skin.position.y = 0.20;
+      skin.castShadow = true;
+      const snout = new THREE.Mesh(new THREE.SphereGeometry(0.13, 10, 8), new THREE.MeshLambertMaterial({ color: 0xc9a876 }));
+      snout.position.set(0, 0.16, 0.26);
+      const nose = new THREE.Mesh(new THREE.SphereGeometry(0.04, 6, 5), new THREE.MeshLambertMaterial({ color: 0x222222 }));
+      nose.position.set(0, 0.18, 0.38);
+      const eyeMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+      const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.035, 6, 5), eyeMat);
+      const e2 = e1.clone();
+      e1.position.set(0.09, 0.24, 0.22);
+      e2.position.set(-0.09, 0.24, 0.22);
+      g.add(spikes, skin, snout, nose, e1, e2);
+      const a0 = U.rand(0, Math.PI * 2), r0 = U.rand(8, 26);
+      addCritter(g, Math.cos(a0) * r0, Math.sin(a0) * r0, U.rand(2.5, 5), U.rand(0.08, 0.16));
+    }
+
+    for (let i = 0; i < 2; i++) {
+      const g = new THREE.Group();
+      const color = i === 0 ? 0x4a90d9 : 0xd9534f;
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.15, 12, 8), new THREE.MeshLambertMaterial({ color: color }));
+      body.scale.set(0.9, 0.9, 1.3);
+      body.castShadow = true;
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), new THREE.MeshLambertMaterial({ color: color }));
+      head.position.set(0, 0.07, 0.13);
+      const beak = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.1, 8), new THREE.MeshLambertMaterial({ color: 0xf39c12 }));
+      beak.rotation.x = Math.PI / 2;
+      beak.position.set(0, 0.06, 0.25);
+      const eyeMat = new THREE.MeshLambertMaterial({ color: 0x222222 });
+      const e1 = new THREE.Mesh(new THREE.SphereGeometry(0.025, 6, 5), eyeMat);
+      const e2 = e1.clone();
+      e1.position.set(0.05, 0.09, 0.18);
+      e2.position.set(-0.05, 0.09, 0.18);
+      const wingMat = new THREE.MeshLambertMaterial({ color: color });
+      const wgL = new THREE.BoxGeometry(0.22, 0.02, 0.12);
+      wgL.translate(-0.11, 0, 0);
+      const wgR = new THREE.BoxGeometry(0.22, 0.02, 0.12);
+      wgR.translate(0.11, 0, 0);
+      const wl = new THREE.Mesh(wgL, wingMat);
+      wl.position.set(0.06, 0.05, 0);
+      const wr = new THREE.Mesh(wgR, wingMat);
+      wr.position.set(-0.06, 0.05, 0);
+      g.add(body, head, beak, e1, e2, wl, wr);
+      const c = addCritter(g, 0, 0, U.rand(10, 20), U.rand(0.12, 0.25) * (Math.random() < 0.5 ? -1 : 1), true, U.rand(6, 9));
+      c.wingL = wl;
+      c.wingR = wr;
+    }
+
+    dynamic.push({
+      update: function (dt, t) {
+        for (let i = 0; i < critters.length; i++) {
+          const c = critters[i];
+          c.a += c.speed * dt;
+          const x = c.cx + Math.cos(c.a) * c.r;
+          const z = c.cz + Math.sin(c.a) * c.r;
+          const s = c.speed >= 0 ? 1 : -1;
+          const heading = Math.atan2(-Math.sin(c.a) * s, Math.cos(c.a) * s);
+          if (c.air) {
+            c.g.position.set(x, c.h + Math.sin(t * 0.7 + c.phase) * 0.5, z);
+            const flap = Math.sin(t * 16 + c.phase) * 0.7;
+            if (c.wingL) {
+              c.wingL.rotation.z = flap;
+              c.wingR.rotation.z = -flap;
+            }
+          } else {
+            c.g.position.set(x, 0.02 + Math.abs(Math.sin(t * 6 + c.phase)) * 0.02, z);
+          }
+          c.g.rotation.y = heading;
+        }
+      }
+    });
+
     function update(dt, t) {
       for (let i = 0; i < dynamic.length; i++) dynamic[i].update(dt, t);
     }
@@ -233,7 +348,7 @@ RB.World = (function () {
       return [px, pz];
     }
 
-    return { update: update, collide: collide, colliders: colliders };
+    return { update: update, collide: collide, colliders: colliders, creatureCount: critters.length };
   }
 
   return { build: build };
