@@ -485,12 +485,12 @@
       state.animal.group.rotation.y = state.heading;
 
       const desired = new THREE.Vector3(
-        state.pos.x - Math.sin(state.heading) * 11.5,
-        state.pos.y + 9.5,
-        state.pos.z - Math.cos(state.heading) * 11.5
+        state.pos.x - Math.sin(state.heading) * 13,
+        state.pos.y + 5.5,
+        state.pos.z - Math.cos(state.heading) * 13
       );
       camera.position.lerp(desired, Math.min(1, dt * 4));
-      camera.lookAt(state.pos.x, state.pos.y + 1.2, state.pos.z);
+      camera.lookAt(state.pos.x, state.pos.y + 1.0, state.pos.z);
 
       // bordjes: wiebelen + schudden
       for (let i = 0; i < state.signs.length; i++) {
