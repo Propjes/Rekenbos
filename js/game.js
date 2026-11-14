@@ -124,20 +124,24 @@
     post.position.y = 0.85;
     post.castShadow = true;
     g.add(post);
+    const tex = numberTexture(number, false);
     const face = new THREE.Mesh(
       new THREE.CircleGeometry(0.62, 32),
-      new THREE.MeshLambertMaterial({ map: numberTexture(number, false) })
+      new THREE.MeshLambertMaterial({ map: tex })
     );
-    face.position.y = 1.85;
+    face.position.set(0, 1.85, 0.012);
     g.add(face);
-    const back = new THREE.Mesh(new THREE.CircleGeometry(0.62, 32), wood);
-    back.position.y = 1.85;
-    back.rotation.y = Math.PI;
-    g.add(back);
+    const backFace = new THREE.Mesh(
+      new THREE.CircleGeometry(0.62, 32),
+      new THREE.MeshLambertMaterial({ map: tex })
+    );
+    backFace.position.set(0, 1.85, -0.012);
+    backFace.rotation.y = Math.PI;
+    g.add(backFace);
     g.position.set(x, 0, z);
     g.lookAt(new THREE.Vector3(0, 0, 0));
     scene.add(g);
-    return { group: g, face: face, number: number, active: true, baseX: x, baseZ: z, shake: 0, seed: Math.random() * 10 };
+    return { group: g, face: face, backFace: backFace, number: number, active: true, baseX: x, baseZ: z, shake: 0, seed: Math.random() * 10 };
   }
 
   function removeSigns() {
@@ -277,8 +281,11 @@
     RB.Sound.wrong();
     sign.active = false;
     sign.shake = 0.5;
-    sign.face.material.map = numberTexture(sign.number, true);
+    const disabledTex = numberTexture(sign.number, true);
+    sign.face.material.map = disabledTex;
+    sign.backFace.material.map = disabledTex;
     sign.face.material.needsUpdate = true;
+    sign.backFace.material.needsUpdate = true;
     showMessage("Probeer het nog eens! 🍂", 1600);
     state.phase = "waiting";
   }
@@ -488,7 +495,9 @@
       // bordjes: wiebelen + schudden
       for (let i = 0; i < state.signs.length; i++) {
         const s = state.signs[i];
-        s.face.position.y = 1.85 + Math.sin(t * 2 + s.seed) * 0.05;
+        const fy = 1.85 + Math.sin(t * 2 + s.seed) * 0.05;
+        s.face.position.y = fy;
+        s.backFace.position.y = fy;
         if (s.shake > 0) {
           s.shake -= dt;
           s.group.position.x = s.baseX + Math.sin(s.shake * 40) * s.shake * 0.35;
