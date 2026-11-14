@@ -23,8 +23,12 @@
   const world = RB.World.build(scene);
 
   // ---------- opslag ----------
-  let unlocked = U.load("costumes", []);
-  let equipped = U.load("equipped", null);
+  try {
+    window.localStorage.removeItem("rekenbos_costumes");
+    window.localStorage.removeItem("rekenbos_equipped");
+  } catch (e) { /* localStorage niet beschikbaar */ }
+  let unlocked = [];
+  let equipped = null;
   let totalStars = U.load("totalStars", 0);
 
   // ---------- staat ----------

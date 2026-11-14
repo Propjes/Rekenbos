@@ -122,8 +122,10 @@ RB.World = (function () {
     scene.add(grass);
 
     // ---------- Paddenstoelen (decoratie) ----------
-    const capColors = [0xc0392b, 0xe67e22, 0xd4a017];
-    for (let i = 0; i < 16; i++) {
+    const capColors = [0xc0392b, 0xe67e22, 0xd4a017, 0xe74c3c, 0xf5ead6];
+    let mushroomCount = 0;
+    for (let i = 0; i < 40; i++) {
+      mushroomCount++;
       const a = U.rand(0, Math.PI * 2), r = U.rand(4, 44);
       const g = new THREE.Group();
       const stem = new THREE.Mesh(
@@ -348,7 +350,7 @@ RB.World = (function () {
       return [px, pz];
     }
 
-    return { update: update, collide: collide, colliders: colliders, creatureCount: critters.length };
+    return { update: update, collide: collide, colliders: colliders, creatureCount: critters.length, mushroomCount: mushroomCount };
   }
 
   return { build: build };
